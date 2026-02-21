@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://mekambo4.github.io/EarthScienceRegents",
+  "homepage": "https://mekambo4.github.io/mekambo-site",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
