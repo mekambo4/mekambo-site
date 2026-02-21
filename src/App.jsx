@@ -136,6 +136,7 @@ const THEMES = {
 };
 
 const BASE_PATH = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
+const FEEDBACK_ENDPOINT = import.meta.env.VITE_FEEDBACK_ENDPOINT || '';
 
 const normalizePath = (path) => {
   if (!path) return '/';
@@ -172,6 +173,24 @@ const parseRoute = (pathname) => {
 };
 
 const getTheme = (appId) => THEMES[appId] || THEMES['earth-space'];
+
+const submitFeedback = async (formData) => {
+  if (!FEEDBACK_ENDPOINT) {
+    throw new Error('Feedback endpoint is not configured');
+  }
+
+  const response = await fetch(FEEDBACK_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Feedback submission failed');
+  }
+};
 
 const GlobalStyles = () => (
   <style
@@ -464,19 +483,18 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
   const theme = getTheme(app.id);
   const [status, setStatus] = useState('idle');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
 
     const formData = new FormData(e.target);
 
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData).toString(),
-    })
-      .then(() => setStatus('success'))
-      .catch(() => setStatus('success'));
+    try {
+      await submitFeedback(formData);
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
   };
 
   return (
@@ -525,12 +543,18 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
             Enjoying my app and want to tell me? Found a bug? Have a feature request? Let me know. I actively read and respond to make the app better for every student.
           </p>
 
+          {status === 'error' && (
+            <div className="mt-4 rounded-xl border p-4 text-sm" style={{ borderColor: '#dc2626', color: '#991b1b', backgroundColor: '#fef2f2' }}>
+              Message could not be sent. Please configure `VITE_FEEDBACK_ENDPOINT` for this site.
+            </div>
+          )}
+
           {status === 'success' ? (
             <div className="mt-7 rounded-2xl border p-6" style={{ borderColor: `${theme.accent}99`, backgroundColor: `${theme.accent}22` }}>
               <CheckCircle2 className="h-8 w-8" style={{ color: theme.moss }} />
               <h2 className="mt-3 font-title text-2xl" style={{ color: theme.ink }}>Message <span className="font-serif italic">received</span></h2>
               <p className="mt-2 text-sm" style={{ color: `${theme.ink}CC` }}>
-                Thank you. Your feedback is now tied to this app.
+                Thank you for your feedback!
               </p>
             </div>
           ) : (
@@ -599,19 +623,18 @@ function CollectionFeedbackPage({ onHome }) {
   const theme = getTheme('earth-space');
   const [status, setStatus] = useState('idle');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
 
     const formData = new FormData(e.target);
 
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData).toString(),
-    })
-      .then(() => setStatus('success'))
-      .catch(() => setStatus('success'));
+    try {
+      await submitFeedback(formData);
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
   };
 
   return (
@@ -645,12 +668,18 @@ function CollectionFeedbackPage({ onHome }) {
             Enjoying my app and want to tell me? Found a bug? Have a feature request? Let me know. I actively read and respond to make the app better for every student.
           </p>
 
+          {status === 'error' && (
+            <div className="mt-4 rounded-xl border p-4 text-sm" style={{ borderColor: '#dc2626', color: '#991b1b', backgroundColor: '#fef2f2' }}>
+              Message could not be sent. Please configure `VITE_FEEDBACK_ENDPOINT` for this site.
+            </div>
+          )}
+
           {status === 'success' ? (
             <div className="mt-7 rounded-2xl border p-6" style={{ borderColor: `${theme.accent}99`, backgroundColor: `${theme.accent}22` }}>
               <CheckCircle2 className="h-8 w-8" style={{ color: theme.moss }} />
               <h2 className="mt-3 font-title text-2xl" style={{ color: theme.ink }}>Message received</h2>
               <p className="mt-2 text-sm" style={{ color: `${theme.ink}CC` }}>
-                Thank you. Your feedback is now tied to the Regents Study Apps collection.
+                Thank you for your feedback!
               </p>
             </div>
           ) : (
