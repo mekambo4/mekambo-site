@@ -239,9 +239,8 @@ function AppCard({ app, onOpen }) {
           {app.subtitle}
         </span>
       </div>
-      <h3 className="font-title text-2xl" style={{ color: theme.ink }}>
-        <span className="font-serif italic" style={{ color: theme.accent }}>{app.name.split(' ')[0]}</span>{' '}
-        <span>{app.name.split(' ').slice(1).join(' ')}</span>
+      <h3 className="font-serif text-3xl italic leading-tight" style={{ color: theme.accent }}>
+        {app.name}
       </h3>
       <p className="mt-3 text-sm" style={{ color: `${theme.ink}BB` }}>
         {app.description}
@@ -250,9 +249,7 @@ function AppCard({ app, onOpen }) {
         className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-title font-semibold"
         style={{ backgroundColor: theme.accent, color: theme.moss }}
       >
-        Open
-        <span className="font-serif text-base italic">Page</span>
-        <ArrowRight className="h-4 w-4" />
+        Open Page <ArrowRight className="h-4 w-4" />
       </div>
     </button>
   );
@@ -278,13 +275,11 @@ function LandingPage({ onOpenApp }) {
             Regents Prep App Collection
           </p>
           <h1 className="animate-fade-up mt-4 max-w-4xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
-            One
-            <span className="font-serif italic text-[#8AD8BC]"> vibrant</span>
-            {' '}platform,
-            <span className="font-serif italic text-[#BDEED9]"> multiple Regents subjects.</span>
+            Choose Your
+            <span className="font-serif italic text-[#8AD8BC]"> Regents Prep App</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
-            Each subject keeps the same elegant experience with a distinct color identity, visual atmosphere, and dedicated feedback channel.
+            Teacher-built study apps for NY Regents courses, each with its own color identity and dedicated feedback page.
           </p>
         </div>
       </section>
@@ -303,9 +298,7 @@ function LandingPage({ onOpenApp }) {
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
           </div>
           <div className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-title font-semibold" style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}>
-            <Sparkles className="h-4 w-4" /> Select
-            <span className="font-serif text-base italic">an app</span>
-            to continue
+            <Sparkles className="h-4 w-4" /> Select an App to continue
           </div>
         </div>
       </footer>
@@ -493,15 +486,16 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
               Support & Feedback
             </p>
             <h1 className="mt-2 font-title text-3xl leading-tight" style={{ color: theme.ink }}>
-              Share feedback for
-              <span className="ml-2 font-serif text-5xl italic" style={{ color: theme.moss }}>
+              Share feedback for the
+              <span className="ml-2 font-serif text-5xl italic" style={{ color: theme.accent }}>
                 {app.name}
               </span>
+              <span className="ml-2">App</span>
             </h1>
           </div>
 
           <p className="mt-1 text-sm font-title" style={{ color: `${theme.ink}CC` }}>
-            Messages from this page are automatically tagged for <strong>{app.name}</strong>.
+            Enjoying my app and want to tell me? Found a bug? Have a feature request? Let me know. I actively read and respond to make the app better for every student.
           </p>
 
           {status === 'success' ? (
@@ -541,6 +535,7 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
                 className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
                 style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
               >
+                <option>Complement</option>
                 <option>Feature Request</option>
                 <option>Bug Report</option>
                 <option>Question</option>
@@ -563,7 +558,7 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
                 style={{ backgroundColor: theme.accent, color: theme.moss }}
               >
                 <MessageSquare className="h-4 w-4" />
-                {status === 'submitting' ? 'Sending...' : <>Send <span className="font-serif italic">Message</span></>}
+                {status === 'submitting' ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           )}
