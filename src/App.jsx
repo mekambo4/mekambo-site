@@ -303,7 +303,7 @@ function LandingPage({ onOpenApp }) {
         <div className="relative mx-auto max-w-6xl text-center">
           <p className="font-title text-3xl md:text-5xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
           <p className="mt-6 font-serif text-4xl italic leading-tight text-white md:text-6xl">
-            "I am an NYC public school teacher and want to make this app as useful as possible. Please submit feature requests or bugs, and I will work to improve it."
+            "I am an NYC public school teacher and want to make these apps as useful as possible. Please submit feature requests or bugs, and I will work to improve them."
           </p>
         </div>
       </section>
