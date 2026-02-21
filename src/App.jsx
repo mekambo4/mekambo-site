@@ -267,7 +267,7 @@ function LandingPage({ onOpenApp }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0C1712] via-[#0C1712B3] to-[#0C171266]" />
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-14 pt-14 md:px-10 md:pb-16 md:pt-20 lg:px-0">
+        <div className="relative mx-auto max-w-6xl px-6 pb-8 pt-8 md:px-10 md:pb-10 md:pt-10 lg:px-0">
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#9FD8C2]" style={{ animationDelay: '0.1s' }}>
             Regents Prep App Collection
           </p>
@@ -328,7 +328,7 @@ function Hero({ app }) {
       <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.ink}88 0%, ${theme.ink}CC 65%, ${theme.ink} 100%)` }} />
       <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.ink}CC 10%, transparent 70%)` }} />
 
-      <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-10 pt-24 md:px-10 md:pb-14 md:pt-28 lg:px-0">
+      <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-5 pt-12 md:px-10 md:pb-7 md:pt-14 lg:px-0">
         <div className="max-w-4xl text-white">
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#C3E7D9]" style={{ animationDelay: '0.15s' }}>
             <CalendarClock className="mr-2 inline h-4 w-4" /> Regents target: {app.examDate}
