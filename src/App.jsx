@@ -245,7 +245,10 @@ function AppCard({ app, onOpen }) {
       <p className="mt-3 text-sm" style={{ color: `${theme.ink}BB` }}>
         {app.description}
       </p>
-      <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: theme.moss }}>
+      <div
+        className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+        style={{ backgroundColor: theme.accent, color: theme.moss }}
+      >
         Open Page <ArrowRight className="h-4 w-4" />
       </div>
     </button>
@@ -272,7 +275,8 @@ function LandingPage({ onOpenApp }) {
             Regents Prep App Collection
           </p>
           <h1 className="animate-fade-up mt-4 max-w-4xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
-            One platform, multiple Regents subjects.
+            One platform,
+            <span className="font-serif italic text-[#8AD8BC]"> multiple Regents subjects.</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
             Each subject keeps the same elegant experience with a distinct color identity, visual atmosphere, and dedicated feedback channel.
@@ -288,7 +292,7 @@ function LandingPage({ onOpenApp }) {
         </div>
       </section>
 
-      <footer className="px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream }}>
+      <footer className="-mt-px px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream, borderTop: 0 }}>
         <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
@@ -472,13 +476,22 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
         </div>
 
         <div className="rounded-[2rem] border border-white/15 bg-white/95 p-8 shadow-2xl md:p-10">
-          <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: theme.moss }}>
-            Support & Feedback
-          </p>
-          <h1 className="mt-2 font-serif text-5xl leading-none" style={{ color: theme.ink }}>
-            {app.name}
-          </h1>
-          <p className="mt-3 text-sm" style={{ color: `${theme.ink}CC` }}>
+          <div
+            className="mb-6 rounded-2xl p-4"
+            style={{ background: `linear-gradient(120deg, ${theme.accent}40 0%, ${theme.accent}14 100%)` }}
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: theme.moss }}>
+              Support & Feedback
+            </p>
+            <h1 className="mt-2 font-title text-3xl leading-tight" style={{ color: theme.ink }}>
+              Share feedback for
+              <span className="ml-2 font-serif text-5xl italic" style={{ color: theme.moss }}>
+                {app.name}
+              </span>
+            </h1>
+          </div>
+
+          <p className="mt-1 text-sm" style={{ color: `${theme.ink}CC` }}>
             Messages from this page are automatically tagged for <strong>{app.name}</strong>.
           </p>
 
@@ -503,21 +516,21 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
                   type="text"
                   placeholder="Name"
                   className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                  style={{ borderColor: `${theme.accent}66` }}
+                  style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
                 />
                 <input
                   name="email"
                   type="email"
                   placeholder="Email (optional)"
                   className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                  style={{ borderColor: `${theme.accent}66` }}
+                  style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
                 />
               </div>
 
               <select
                 name="topic"
                 className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                style={{ borderColor: `${theme.accent}66` }}
+                style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
               >
                 <option>Feature Request</option>
                 <option>Bug Report</option>
@@ -531,14 +544,14 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
                 rows="5"
                 placeholder="Tell me what you want improved or what issue you found."
                 className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
-                style={{ borderColor: `${theme.accent}66` }}
+                style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
               />
 
               <button
                 type="submit"
                 disabled={status === 'submitting'}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white disabled:opacity-70"
-                style={{ backgroundColor: theme.moss }}
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold disabled:opacity-70"
+                style={{ backgroundColor: theme.accent, color: theme.moss }}
               >
                 <MessageSquare className="h-4 w-4" />
                 {status === 'submitting' ? 'Sending...' : 'Send Message'}
@@ -560,7 +573,7 @@ function AppPage({ app, onHome, onFeedback }) {
       <Hero app={app} />
       <FeatureSection app={app} />
 
-      <footer className="px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream }}>
+      <footer className="-mt-px px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream, borderTop: 0 }}>
         <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: theme.accent }} /> Regents Prep App Series
