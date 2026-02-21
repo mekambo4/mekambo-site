@@ -302,8 +302,8 @@ function LandingPage({ onOpenApp }) {
         />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0C1712D9 0%, #0C1712F2 100%)' }} />
         <div className="relative mx-auto max-w-6xl text-center">
-          <p className="font-title text-3xl md:text-5xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
-          <p className="mt-6 font-serif text-3xl italic leading-tight text-white md:text-5xl">
+          <p className="font-title text-2xl md:text-4xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
+          <p className="mt-6 font-serif text-2xl italic leading-tight text-white md:text-4xl">
             "I am an NYC public school teacher and want to make these apps as useful as possible. Please submit feature requests or bugs, and I will work to improve them. I would be delighted to hear if it is helpful to you."
           </p>
         </div>
