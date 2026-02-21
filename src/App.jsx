@@ -240,16 +240,19 @@ function AppCard({ app, onOpen }) {
         </span>
       </div>
       <h3 className="font-title text-2xl" style={{ color: theme.ink }}>
-        {app.name}
+        <span className="font-serif italic" style={{ color: theme.accent }}>{app.name.split(' ')[0]}</span>{' '}
+        <span>{app.name.split(' ').slice(1).join(' ')}</span>
       </h3>
       <p className="mt-3 text-sm" style={{ color: `${theme.ink}BB` }}>
         {app.description}
       </p>
       <div
-        className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+        className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-title font-semibold"
         style={{ backgroundColor: theme.accent, color: theme.moss }}
       >
-        Open Page <ArrowRight className="h-4 w-4" />
+        Open
+        <span className="font-serif text-base italic">Page</span>
+        <ArrowRight className="h-4 w-4" />
       </div>
     </button>
   );
@@ -275,8 +278,10 @@ function LandingPage({ onOpenApp }) {
             Regents Prep App Collection
           </p>
           <h1 className="animate-fade-up mt-4 max-w-4xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
-            One platform,
-            <span className="font-serif italic text-[#8AD8BC]"> multiple Regents subjects.</span>
+            One
+            <span className="font-serif italic text-[#8AD8BC]"> vibrant</span>
+            {' '}platform,
+            <span className="font-serif italic text-[#BDEED9]"> multiple Regents subjects.</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
             Each subject keeps the same elegant experience with a distinct color identity, visual atmosphere, and dedicated feedback channel.
@@ -297,8 +302,10 @@ function LandingPage({ onOpenApp }) {
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold" style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}>
-            <Sparkles className="h-4 w-4" /> Select an app to continue
+          <div className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-title font-semibold" style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}>
+            <Sparkles className="h-4 w-4" /> Select
+            <span className="font-serif text-base italic">an app</span>
+            to continue
           </div>
         </div>
       </footer>
@@ -462,14 +469,16 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
           <button
             type="button"
             onClick={onHome}
-            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-4 py-2 text-sm font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-title font-semibold text-white"
+            style={{ backgroundColor: `${theme.accent}33` }}
           >
             <ArrowLeft className="h-4 w-4" /> All Apps
           </button>
           <button
             type="button"
             onClick={onBackToApp}
-            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/20 px-4 py-2 text-sm font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-title font-semibold text-white"
+            style={{ backgroundColor: `${theme.accent}33` }}
           >
             Back to Page
           </button>
@@ -491,14 +500,14 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
             </h1>
           </div>
 
-          <p className="mt-1 text-sm" style={{ color: `${theme.ink}CC` }}>
+          <p className="mt-1 text-sm font-title" style={{ color: `${theme.ink}CC` }}>
             Messages from this page are automatically tagged for <strong>{app.name}</strong>.
           </p>
 
           {status === 'success' ? (
             <div className="mt-7 rounded-2xl border p-6" style={{ borderColor: `${theme.accent}99`, backgroundColor: `${theme.accent}22` }}>
               <CheckCircle2 className="h-8 w-8" style={{ color: theme.moss }} />
-              <h2 className="mt-3 font-title text-2xl" style={{ color: theme.ink }}>Message received</h2>
+              <h2 className="mt-3 font-title text-2xl" style={{ color: theme.ink }}>Message <span className="font-serif italic">received</span></h2>
               <p className="mt-2 text-sm" style={{ color: `${theme.ink}CC` }}>
                 Thank you. Your feedback is now tied to this app.
               </p>
@@ -550,11 +559,11 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
               <button
                 type="submit"
                 disabled={status === 'submitting'}
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold disabled:opacity-70"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-title font-semibold disabled:opacity-70"
                 style={{ backgroundColor: theme.accent, color: theme.moss }}
               >
                 <MessageSquare className="h-4 w-4" />
-                {status === 'submitting' ? 'Sending...' : 'Send Message'}
+                {status === 'submitting' ? 'Sending...' : <>Send <span className="font-serif italic">Message</span></>}
               </button>
             </form>
           )}
