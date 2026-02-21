@@ -288,8 +288,8 @@ function LandingPage({ onOpenApp }) {
         </div>
       </section>
 
-      <footer className="px-6 pb-8 pt-4 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream }}>
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 border-t border-white/20 pt-5 md:flex-row md:items-center md:justify-between">
+      <footer className="px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream }}>
+        <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
           </div>
@@ -560,8 +560,8 @@ function AppPage({ app, onHome, onFeedback }) {
       <Hero app={app} />
       <FeatureSection app={app} />
 
-      <footer className="px-6 pb-8 pt-4 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream }}>
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 border-t border-white/20 pt-5 md:flex-row md:items-center md:justify-between">
+      <footer className="px-6 pb-2 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream }}>
+        <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: theme.accent }} /> Regents Prep App Series
           </div>
