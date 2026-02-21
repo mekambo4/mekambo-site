@@ -155,6 +155,7 @@ const stripBasePath = (pathname) => {
 const parseRoute = (pathname) => {
   const relative = stripBasePath(pathname);
   if (relative === '/') return { page: 'landing' };
+  if (relative === '/feedback') return { page: 'collection_feedback' };
 
   const feedbackMatch = /^\/apps\/([^/]+)\/feedback$/.exec(relative);
   if (feedbackMatch) return { page: 'feedback', appId: decodeURIComponent(feedbackMatch[1]) };
@@ -302,8 +303,8 @@ function LandingPage({ onOpenApp }) {
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0C1712D9 0%, #0C1712F2 100%)' }} />
         <div className="relative mx-auto max-w-6xl text-center">
           <p className="font-title text-3xl md:text-5xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
-          <p className="mt-6 font-serif text-4xl italic leading-tight text-white md:text-6xl">
-            "I am an NYC public school teacher and want to make these apps as useful as possible. Please submit feature requests or bugs, and I will work to improve them."
+          <p className="mt-6 font-serif text-3xl italic leading-tight text-white md:text-5xl">
+            "I am an NYC public school teacher and want to make these apps as useful as possible. Please submit feature requests or bugs, and I will work to improve them. I would be delighted to hear if it is helpful to you."
           </p>
         </div>
       </section>
@@ -315,7 +316,7 @@ function LandingPage({ onOpenApp }) {
           </div>
           <button
             type="button"
-            onClick={() => onOpenApp('earth-space')}
+            onClick={() => onOpenApp('feedback')}
             className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
             style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}
           >
@@ -589,6 +590,126 @@ function FeedbackPage({ app, onBackToApp, onHome }) {
   );
 }
 
+function CollectionFeedbackPage({ onHome }) {
+  const theme = getTheme('earth-space');
+  const [status, setStatus] = useState('idle');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+
+    const formData = new FormData(e.target);
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString(),
+    })
+      .then(() => setStatus('success'))
+      .catch(() => setStatus('success'));
+  };
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: theme.ink }}>
+      <div className="absolute inset-0 bg-cover bg-center opacity-35" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2200&auto=format&fit=crop")' }} />
+      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.ink}D9 0%, ${theme.ink}F2 100%)` }} />
+
+      <div className="relative mx-auto max-w-3xl px-6 pb-14 pt-10 md:px-10 lg:px-0">
+        <div className="mb-6 flex items-center justify-start gap-3">
+          <button
+            type="button"
+            onClick={onHome}
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-title font-semibold text-white"
+            style={{ backgroundColor: `${theme.accent}33` }}
+          >
+            <ArrowLeft className="h-4 w-4" /> All Apps
+          </button>
+        </div>
+
+        <div className="rounded-[2rem] border border-white/15 bg-white/95 p-8 shadow-2xl md:p-10">
+          <div className="mb-6 rounded-2xl p-4" style={{ background: `linear-gradient(120deg, ${theme.accent}40 0%, ${theme.accent}14 100%)` }}>
+            <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: theme.moss }}>
+              Support & Feedback
+            </p>
+            <h1 className="mt-2 font-title text-3xl leading-tight" style={{ color: theme.ink }}>
+              Share feedback for the Regents Study Apps
+            </h1>
+          </div>
+
+          <p className="mt-1 text-sm font-title" style={{ color: `${theme.ink}CC` }}>
+            Enjoying my app and want to tell me? Found a bug? Have a feature request? Let me know. I actively read and respond to make the app better for every student.
+          </p>
+
+          {status === 'success' ? (
+            <div className="mt-7 rounded-2xl border p-6" style={{ borderColor: `${theme.accent}99`, backgroundColor: `${theme.accent}22` }}>
+              <CheckCircle2 className="h-8 w-8" style={{ color: theme.moss }} />
+              <h2 className="mt-3 font-title text-2xl" style={{ color: theme.ink }}>Message received</h2>
+              <p className="mt-2 text-sm" style={{ color: `${theme.ink}CC` }}>
+                Thank you. Your feedback is now tied to the Regents Study Apps collection.
+              </p>
+            </div>
+          ) : (
+            <form name="support-form" method="POST" data-netlify="true" onSubmit={handleSubmit} className="mt-7 space-y-4">
+              <input type="hidden" name="form-name" value="support-form" />
+              <input type="hidden" name="app_id" value="regents-study-apps" />
+              <input type="hidden" name="app_name" value="Regents Study Apps" />
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <input
+                  name="name"
+                  required
+                  type="text"
+                  placeholder="Name"
+                  className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+                  style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
+                />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Email (optional)"
+                  className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+                  style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
+                />
+              </div>
+
+              <select
+                name="topic"
+                className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+                style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
+              >
+                <option>Complement</option>
+                <option>Feature Request</option>
+                <option>Bug Report</option>
+                <option>Question</option>
+                <option>Other</option>
+              </select>
+
+              <textarea
+                name="message"
+                required
+                rows="5"
+                placeholder="Tell me what you want improved or what issue you found."
+                className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+                style={{ borderColor: `${theme.accent}66`, backgroundColor: `${theme.accent}10` }}
+              />
+
+              <button
+                type="submit"
+                disabled={status === 'submitting'}
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-title font-semibold disabled:opacity-70"
+                style={{ backgroundColor: theme.accent, color: theme.moss }}
+              >
+                <MessageSquare className="h-4 w-4" />
+                {status === 'submitting' ? 'Sending...' : 'Send Message'}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AppPage({ app, onHome, onFeedback }) {
   const theme = getTheme(app.id);
 
@@ -656,7 +777,17 @@ export default function App() {
       </svg>
       <div className="noise-overlay" style={{ filter: 'url(#noiseFilter)' }} />
 
-      {route.page === 'landing' && <LandingPage onOpenApp={(appId) => goTo(`/apps/${appId}`)} />}
+      {route.page === 'landing' && (
+        <LandingPage
+          onOpenApp={(appId) => {
+            if (appId === 'feedback') {
+              goTo('/feedback');
+              return;
+            }
+            goTo(`/apps/${appId}`);
+          }}
+        />
+      )}
 
       {route.page === 'app' && selectedApp && (
         <AppPage
@@ -672,6 +803,10 @@ export default function App() {
           onHome={() => goTo('/')}
           onBackToApp={() => goTo(`/apps/${selectedApp.id}`)}
         />
+      )}
+
+      {route.page === 'collection_feedback' && (
+        <CollectionFeedbackPage onHome={() => goTo('/')} />
       )}
     </>
   );
