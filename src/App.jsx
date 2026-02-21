@@ -1,525 +1,459 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  ArrowRight, 
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ArrowRight,
+  Atom,
+  FlaskConical,
   Globe2,
-  BookOpen,
-  Lightbulb,
-  CheckCircle2, 
-  Menu,
+  Landmark,
+  Leaf,
   MessageSquare,
-  ChevronLeft,
-  CalendarClock,
-  GraduationCap
+  Rocket,
+  Sigma,
+  Sparkles,
+  CheckCircle2,
 } from 'lucide-react';
 
-// --- DESIGN TOKENS (Updated to Match App Screenshot) ---
-const theme = {
-  moss: '#1B2E24',     // Dark forest background
-  mint: '#69C7A6',     // App accent color
-  cream: '#F4F7F5',    // Off-white text/bg
-  charcoal: '#0C1712', // Deepest dark
-};
-
-// --- GLOBAL STYLES & FONT INJECTION ---
-const GlobalStyles = () => (
-  <style dangerouslySetInnerHTML={{__html: `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-
-    :root {
-      background-color: ${theme.cream};
-      color: ${theme.charcoal};
-    }
-
-    body {
-      margin: 0;
-      overflow-x: hidden;
-      font-family: 'Outfit', sans-serif;
-      background-color: ${theme.cream};
-    }
-
-    .font-sans-bold { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-sans { font-family: 'Outfit', sans-serif; }
-    .font-drama { font-family: 'Cormorant Garamond', serif; }
-    .font-mono { font-family: 'IBM Plex Mono', monospace; }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: ${theme.cream}; }
-    ::-webkit-scrollbar-thumb { background: ${theme.moss}; border-radius: 4px; }
-
-    .noise-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.05;
-      mix-blend-mode: multiply;
-    }
-
-    /* Custom Animations */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-up {
-      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      opacity: 0;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    .animate-float {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-soft {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-    .animate-pulse-soft {
-      animation: pulse-soft 3s ease-in-out infinite;
-    }
-  `}} />
-);
-
-// --- COMPONENTS ---
-
-// 1. Magnetic Button
-const MagneticButton = ({ children, primary = false, onClick, href, className = "" }) => {
-  const buttonRef = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const btn = buttonRef.current;
-    if (!btn) return;
-
-    const move = (e) => {
-      const rect = btn.getBoundingClientRect();
-      const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-      const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-      setPosition({ x, y });
-    };
-
-    const leave = () => {
-      setPosition({ x: 0, y: 0 });
-    };
-
-    btn.addEventListener('mousemove', move);
-    btn.addEventListener('mouseleave', leave);
-    return () => {
-      btn.removeEventListener('mousemove', move);
-      btn.removeEventListener('mouseleave', leave);
-    };
-  }, []);
-
-  const baseStyle = `group relative overflow-hidden rounded-full px-8 py-4 font-sans-bold text-sm tracking-wide transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.03] inline-flex justify-center items-center ${className}`;
-  const colorStyle = primary 
-    ? `bg-[${theme.mint}] text-[${theme.moss}]` 
-    : `bg-[${theme.moss}] text-[${theme.cream}]`;
-
-  const InnerContent = () => (
-    <>
-      <span className="relative z-10 flex items-center gap-2">{children}</span>
-      <div className="absolute inset-0 z-0 h-full w-full translate-y-full bg-black/10 transition-transform duration-500 ease-out group-hover:translate-y-0 rounded-full" />
-    </>
-  );
-
-  if (href) {
-    return (
-      <a 
-        ref={buttonRef} 
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${baseStyle} ${colorStyle}`}
-        style={{ transform: `translate(${position.x}px, ${position.y}px)`, backgroundColor: primary ? theme.mint : theme.moss, color: primary ? theme.moss : theme.cream }}
-      >
-        <InnerContent />
-      </a>
-    );
-  }
-
-  return (
-    <button 
-      ref={buttonRef} 
-      onClick={onClick} 
-      className={`${baseStyle} ${colorStyle}`}
-      style={{ transform: `translate(${position.x}px, ${position.y}px)`, backgroundColor: primary ? theme.mint : theme.moss, color: primary ? theme.moss : theme.cream }}
-    >
-      <InnerContent />
-    </button>
-  );
-};
-
-// 2. Navbar
-const Navbar = ({ setView }) => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <nav className={`fixed top-6 left-1/2 z-50 flex w-[90%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full px-6 py-4 transition-all duration-500 ${
-      scrolled ? 'bg-[#1B2E24]/90 backdrop-blur-xl border border-white/10 shadow-lg text-[#F4F7F5]' : 'bg-transparent text-[#F4F7F5]'
-    }`}>
-      <div 
-        className="font-sans-bold text-lg tracking-tight flex items-center gap-2 cursor-pointer"
-        onClick={() => setView('home')}
-      >
-        <Globe2 className="w-5 h-5 text-[#69C7A6]" />
-        Earth Science Regents
-      </div>
-      <div className="hidden md:flex gap-8 font-sans text-sm font-medium">
-        <button onClick={() => setView('home')} className="hover:text-[#69C7A6] transition-colors">App</button>
-        <button onClick={() => setView('support')} className="hover:text-[#69C7A6] transition-colors">Support & Feedback</button>
-      </div>
-      <MagneticButton 
-        primary 
-        className="hidden md:flex !py-2.5 !px-6"
-        href="https://apps.apple.com/us/app/earth-science-regents-study/id378695932"
-      >
-        Get the App
-      </MagneticButton>
-      <Menu className="block md:hidden w-6 h-6 text-[#69C7A6]" />
-    </nav>
-  );
-};
-
-// 3. Hero Section
-const Hero = () => {
-  return (
-    <section className="relative h-[100dvh] w-full overflow-hidden bg-[#0C1712]">
-      {/* Background Image - Lush Forest matching screenshot */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=2000&auto=format&fit=crop")' }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1B2E24] via-[#1B2E24]/60 to-transparent mix-blend-multiply" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0C1712]/80 to-transparent" />
-
-      {/* Content */}
-      <div className="absolute bottom-0 left-0 w-full p-8 pb-20 md:p-20 lg:p-32 flex flex-col justify-end h-full">
-        <div className="max-w-4xl text-[#F4F7F5]">
-          <p className="animate-fade-up font-mono text-sm tracking-widest text-[#69C7A6] uppercase mb-6 flex items-center gap-2" style={{ animationDelay: '0.2s' }}>
-            <CalendarClock className="w-4 h-4" /> Next Exam: June 18, 2026
-          </p>
-          <h1 className="animate-fade-up font-sans-bold text-5xl md:text-7xl lg:text-8xl leading-[0.9] tracking-tighter mb-2" style={{ animationDelay: '0.3s' }}>
-            Master the
-          </h1>
-          <h1 className="animate-fade-up font-drama italic text-7xl md:text-8xl lg:text-[10rem] leading-[0.8] text-[#69C7A6] pr-4" style={{ animationDelay: '0.4s' }}>
-            Regents.
-          </h1>
-          <p className="animate-fade-up font-sans text-lg md:text-xl mt-8 max-w-xl text-[#F4F7F5]/80 leading-relaxed font-light" style={{ animationDelay: '0.5s' }}>
-            Practice questions from past exams, build your vocabulary with custom notecards, and unlock essential study tips.
-          </p>
-          <div className="animate-fade-up mt-12 flex items-center gap-6 flex-wrap" style={{ animationDelay: '0.8s' }}>
-            <MagneticButton primary href="https://apps.apple.com/us/app/earth-science-regents-study/id378695932">
-              Download App <ArrowRight className="w-4 h-4" />
-            </MagneticButton>
-            <span className="font-mono text-xs text-[#F4F7F5]/60 bg-black/20 px-4 py-2 rounded-full backdrop-blur-md border border-white/5">
-              Available on App Store
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// 4. Feature Protocol (Sticky Stacking Archive)
-const Protocol = () => {
-  return (
-    <section id="features" className="relative w-full bg-[#F4F7F5] pb-32">
-      
-      {/* Card 1: Practice Exams */}
-      <div className="sticky top-0 w-full h-screen flex items-center justify-center p-6 bg-[#F4F7F5]">
-        <div className="w-full max-w-6xl h-[80vh] max-h-[700px] bg-[#ffffff] rounded-[3rem] p-10 md:p-20 shadow-xl border border-[#1B2E24]/5 flex flex-col md:flex-row items-center gap-16">
-          <div className="flex-1 w-full relative h-full min-h-[300px] bg-[#1B2E24]/5 rounded-[2rem] flex items-center justify-center overflow-hidden">
-            <GraduationCap className="animate-float w-32 h-32 text-[#69C7A6] opacity-30 absolute" />
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-black/5 z-10 w-3/4 animate-fade-up">
-              <div className="w-full h-4 bg-gray-100 rounded-full mb-4"></div>
-              <div className="w-5/6 h-4 bg-gray-100 rounded-full mb-8"></div>
-              <div className="flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#69C7A6]/20 flex items-center justify-center text-[#1B2E24] font-bold">A</div>
-                <div className="h-8 flex-1 bg-gray-50 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="font-mono text-xl text-[#69C7A6] mb-4 border border-[#69C7A6] w-12 h-12 flex items-center justify-center rounded-full">01</div>
-            <h3 className="font-sans-bold text-4xl md:text-5xl text-[#1B2E24] mb-6">Past Exams</h3>
-            <p className="font-sans text-xl text-[#1B2E24]/70 leading-relaxed">
-              Drill with real questions from past New York State Earth Science Regents exams. Get immediate feedback and understand the logic behind every answer.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Card 2: Vocabulary */}
-      <div className="sticky top-0 w-full h-screen flex items-center justify-center p-6 bg-[#F4F7F5]">
-        <div className="w-full max-w-6xl h-[80vh] max-h-[700px] bg-[#1B2E24] rounded-[3rem] p-10 md:p-20 shadow-2xl flex flex-col md:flex-row items-center gap-16">
-          <div className="flex-1 w-full relative h-full min-h-[300px] bg-black/20 rounded-[2rem] flex items-center justify-center overflow-hidden perspective-1000">
-             <BookOpen className="w-40 h-40 text-[#69C7A6] opacity-10 absolute animate-pulse-soft" />
-             {/* Notecard Simulation */}
-             <div className="w-64 h-40 bg-[#F4F7F5] rounded-xl shadow-2xl flex items-center justify-center p-6 text-center z-10 transform rotate-[-5deg] transition-transform hover:rotate-0 duration-300">
-               <span className="font-sans-bold text-2xl text-[#1B2E24]">Lithosphere</span>
-             </div>
-             <div className="absolute w-64 h-40 bg-[#69C7A6] rounded-xl opacity-20 transform rotate-[10deg] z-0"></div>
-          </div>
-          <div className="flex-1">
-            <div className="font-mono text-xl text-[#69C7A6] mb-4 border border-[#69C7A6] w-12 h-12 flex items-center justify-center rounded-full">02</div>
-            <h3 className="font-sans-bold text-4xl md:text-5xl text-[#F4F7F5] mb-6">Vocab Notecards</h3>
-            <p className="font-sans text-xl text-[#F4F7F5]/70 leading-relaxed">
-              Earth Science is its own language. Master the crucial terminology with built-in digital flashcards designed for rapid memorization and retention.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Card 3: Key Ideas */}
-      <div className="sticky top-0 w-full h-screen flex items-center justify-center p-6 bg-[#F4F7F5]">
-        <div className="w-full max-w-6xl h-[80vh] max-h-[700px] bg-[#69C7A6] rounded-[3rem] p-10 md:p-20 shadow-2xl flex flex-col md:flex-row items-center gap-16">
-          <div className="flex-1 w-full relative h-full min-h-[300px] bg-black/10 rounded-[2rem] flex items-center justify-center overflow-hidden">
-            <Lightbulb className="w-32 h-32 text-[#1B2E24] opacity-20 absolute animate-float" />
-            <div className="bg-[#1B2E24] p-8 rounded-2xl w-3/4 shadow-2xl z-10 border border-white/10">
-              <h4 className="font-sans-bold text-[#69C7A6] mb-4 flex items-center gap-2"><CheckCircle2 className="w-4 h-4"/> Study Tip</h4>
-              <p className="font-sans text-[#F4F7F5]/90 text-sm leading-relaxed">
-                "Always check the ESRT (Earth Science Reference Tables) first. Nearly 40% of the exam answers can be found directly in or inferred from the tables."
-              </p>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="font-mono text-xl text-[#1B2E24] mb-4 border border-[#1B2E24] w-12 h-12 flex items-center justify-center rounded-full">03</div>
-            <h3 className="font-sans-bold text-4xl md:text-5xl text-[#1B2E24] mb-6">Key Ideas & Tips</h3>
-            <p className="font-sans text-xl text-[#1B2E24]/80 leading-relaxed">
-              Don't just study harder, study smarter. Get curated tips, core concepts, and strategies specifically tailored for the format of the NYS Regents.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// 5. Teacher's Note (Replacing Philosophy)
-const TeacherNote = ({ setView }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
+const APPS = [
+  {
+    id: 'earth-space',
+    name: 'Earth & Space Science',
+    subtitle: 'Available now',
+    description:
+      'Practice with Regents-style questions, build vocabulary, and learn high-impact test strategies.',
+    icon: Leaf,
+    comingSoon: false,
+    appStoreUrl: 'https://apps.apple.com/us/app/earth-science-regents-study/id378695932',
+    features: [
+      {
+        title: 'Past Regents Practice',
+        copy: 'Train with exam-style prompts and immediate feedback to build confidence before test day.',
       },
-      { threshold: 0.3 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+      {
+        title: 'Vocabulary Notecards',
+        copy: 'Memorize core Earth and Space Science terms with focused flashcard-style review.',
+      },
+      {
+        title: 'Study Strategies',
+        copy: 'Use targeted tips to make the most of your review time and reference tables.',
+      },
+    ],
+  },
+  {
+    id: 'biology',
+    name: 'Biology',
+    subtitle: 'Coming soon',
+    description:
+      'A future Regents prep app focused on life science concepts, labs, and exam strategy.',
+    icon: FlaskConical,
+    comingSoon: true,
+    features: [],
+  },
+  {
+    id: 'global-history',
+    name: 'Global History',
+    subtitle: 'Coming soon',
+    description:
+      'A future Regents prep app focused on themes, documents, and long-essay preparation.',
+    icon: Globe2,
+    comingSoon: true,
+    features: [],
+  },
+  {
+    id: 'us-history',
+    name: 'United States History',
+    subtitle: 'Coming soon',
+    description:
+      'A future Regents prep app focused on key eras, civic understanding, and evidence-based writing.',
+    icon: Landmark,
+    comingSoon: true,
+    features: [],
+  },
+  {
+    id: 'algebra-1',
+    name: 'Algebra I',
+    subtitle: 'Coming soon',
+    description:
+      'A future Regents prep app focused on core algebra skills, fluency, and exam pacing.',
+    icon: Sigma,
+    comingSoon: true,
+    features: [],
+  },
+];
 
-  return (
-    <section ref={sectionRef} className="relative py-32 px-6 overflow-hidden bg-[#0C1712] text-center flex flex-col justify-center min-h-[70vh]">
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-10 scale-110 bg-fixed"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2000&auto=format&fit=crop")' }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0C1712] via-transparent to-[#0C1712]" />
-      
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <p className={`font-sans text-xl md:text-2xl text-[#69C7A6] mb-8 font-light tracking-wide transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          A note from the developer
-        </p>
-        <h2 className={`font-drama italic text-4xl md:text-5xl lg:text-6xl text-[#F4F7F5] leading-relaxed mb-12 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          "I am an NYC public school teacher and want to make this app as useful as possible. Please submit feature requests or bugs, and I will work to improve it."
-        </h2>
-        <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <MagneticButton primary onClick={() => setView('support')} className="!py-4 !px-8 text-lg">
-            <MessageSquare className="w-5 h-5 mr-2" /> Send Feedback
-          </MagneticButton>
-        </div>
-      </div>
-    </section>
-  );
+const THEMES = {
+  'earth-space': {
+    ink: '#10251E',
+    shell: '#F3F7F3',
+    accent: '#66C8A3',
+    accentSoft: '#D5F2E8',
+    muted: '#4C6960',
+    panel: '#FFFFFF',
+  },
+  biology: {
+    ink: '#16261B',
+    shell: '#F4F8F2',
+    accent: '#7AC65A',
+    accentSoft: '#E1F4D6',
+    muted: '#506A4B',
+    panel: '#FFFFFF',
+  },
+  'global-history': {
+    ink: '#271D18',
+    shell: '#FAF5EF',
+    accent: '#D4975B',
+    accentSoft: '#F3E2CE',
+    muted: '#7A5A45',
+    panel: '#FFFFFF',
+  },
+  'us-history': {
+    ink: '#132238',
+    shell: '#F3F6FA',
+    accent: '#5D8ECB',
+    accentSoft: '#D8E7F8',
+    muted: '#4B6286',
+    panel: '#FFFFFF',
+  },
+  'algebra-1': {
+    ink: '#25193A',
+    shell: '#F7F4FC',
+    accent: '#9B77D7',
+    accentSoft: '#E7DDF8',
+    muted: '#665284',
+    panel: '#FFFFFF',
+  },
 };
 
-// 6. Support Form View (With Netlify Integration)
-const SupportForm = ({ setView }) => {
-  const [status, setStatus] = useState('idle'); // idle, submitting, success
+const BASE_PATH = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const normalizePath = (path) => {
+  if (!path) return '/';
+  const withoutTrailingSlash = path.replace(/\/+$/, '');
+  return withoutTrailingSlash || '/';
+};
+
+const stripBasePath = (pathname) => {
+  const normalized = normalizePath(pathname);
+  if (BASE_PATH && normalized.startsWith(BASE_PATH)) {
+    const sliced = normalized.slice(BASE_PATH.length);
+    return sliced || '/';
+  }
+  return normalized;
+};
+
+const withBasePath = (path) => {
+  const normalized = normalizePath(path);
+  return BASE_PATH ? `${BASE_PATH}${normalized === '/' ? '' : normalized}` : normalized;
+};
+
+const getAppIdFromPath = (pathname) => {
+  const relativePath = stripBasePath(pathname);
+  if (relativePath === '/') return null;
+  const match = /^\/apps\/([^/]+)$/.exec(relativePath);
+  return match ? decodeURIComponent(match[1]) : '__not_found__';
+};
+
+const pageWrapStyle = (theme) => ({
+  backgroundColor: theme.shell,
+  color: theme.ink,
+  minHeight: '100vh',
+});
+
+function LandingPage({ onSelect }) {
+  return (
+    <div className="min-h-screen px-6 py-10 md:px-12 lg:px-20" style={pageWrapStyle(THEMES['earth-space'])}>
+      <header className="mx-auto flex max-w-6xl items-center justify-between py-4">
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <Atom className="h-5 w-5" /> Regents Prep Apps
+        </div>
+      </header>
+
+      <section className="mx-auto grid max-w-6xl gap-8 pb-8 pt-14 md:grid-cols-[1.2fr_1fr] md:items-end">
+        <div>
+          <p className="mb-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style={{ backgroundColor: '#E4F1EC', color: '#1E3A31' }}>
+            Teacher-built learning tools
+          </p>
+          <h1 className="text-4xl font-bold leading-tight md:text-6xl">Choose your Regents prep app</h1>
+          <p className="mt-5 max-w-2xl text-lg" style={{ color: '#3E5B52' }}>
+            Every app uses the same clean experience with its own subject-specific color identity.
+            Earth & Space Science is live now. Other subjects are coming soon.
+          </p>
+        </div>
+        <div className="rounded-3xl p-6" style={{ backgroundColor: '#0F241E', color: '#EEF7F3' }}>
+          <p className="text-sm uppercase tracking-[0.2em]" style={{ color: '#9CCCB9' }}>
+            Current release
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold">Earth & Space Science</h2>
+          <p className="mt-2 text-sm" style={{ color: '#BBD9CE' }}>
+            Interactive marketing and support page now available.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-6xl gap-5 pb-12 md:grid-cols-2 lg:grid-cols-3">
+        {APPS.map((app) => {
+          const theme = THEMES[app.id];
+          const Icon = app.icon;
+          return (
+            <button
+              key={app.id}
+              type="button"
+              onClick={() => onSelect(app.id)}
+              className="rounded-3xl border p-6 text-left transition hover:-translate-y-1 hover:shadow-xl"
+              style={{ backgroundColor: theme.panel, borderColor: theme.accentSoft }}
+            >
+              <div className="mb-6 flex items-center justify-between">
+                <span
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-2xl"
+                  style={{ backgroundColor: theme.accentSoft, color: theme.ink }}
+                >
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.muted }}>
+                  {app.subtitle}
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold" style={{ color: theme.ink }}>{app.name}</h3>
+              <p className="mt-3 text-sm" style={{ color: theme.muted }}>{app.description}</p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: theme.ink }}>
+                View Page <ArrowRight className="h-4 w-4" />
+              </div>
+            </button>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function FeedbackForm({ app, theme }) {
+  const [status, setStatus] = useState('idle');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus('submitting');
-    
-    // Package up the form data
+
     const formData = new FormData(e.target);
-    
-    // Send it to Netlify using AJAX
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(formData).toString()
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString(),
     })
-    .then(() => setStatus('success'))
-    .catch((error) => {
-      console.error('Form submission error:', error);
-      // Fallback to success visually if you're testing it locally without Netlify
-      setStatus('success'); 
-    });
+      .then(() => setStatus('success'))
+      .catch(() => setStatus('success'));
   };
 
-  return (
-    <div className="min-h-screen bg-[#F4F7F5] pt-32 pb-20 px-6 flex items-center justify-center relative">
-      <button 
-        onClick={() => setView('home')}
-        className="absolute top-8 left-8 flex items-center gap-2 text-[#1B2E24]/60 hover:text-[#1B2E24] transition-colors font-sans-bold"
-      >
-        <ChevronLeft className="w-5 h-5" /> Back to App
-      </button>
-
-      <div className="w-full max-w-2xl bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_20px_60px_-15px_rgba(27,46,36,0.1)] border border-[#1B2E24]/5">
-        <div className="mb-10 text-center">
-          <div className="w-16 h-16 bg-[#69C7A6]/20 rounded-full flex items-center justify-center mx-auto mb-6 text-[#1B2E24]">
-            <MessageSquare className="w-8 h-8" />
-          </div>
-          <h2 className="font-drama italic text-4xl text-[#1B2E24] mb-4">Support & Feedback</h2>
-          <p className="font-sans text-[#1B2E24]/60">
-            Found a bug? Have a feature request? Let me know. I actively read and respond to make the app better for every student.
-          </p>
-        </div>
-
-        {status === 'success' ? (
-          <div className="bg-[#69C7A6]/10 border border-[#69C7A6]/30 rounded-2xl p-8 text-center animate-fade-up">
-            <CheckCircle2 className="w-12 h-12 text-[#69C7A6] mx-auto mb-4" />
-            <h3 className="font-sans-bold text-xl text-[#1B2E24] mb-2">Message Received</h3>
-            <p className="font-sans text-[#1B2E24]/70 mb-6">Thank you for helping improve Earth Science Regents Study!</p>
-            <MagneticButton onClick={() => setView('home')}>Return Home</MagneticButton>
-          </div>
-        ) : (
-          <form 
-            name="support-form" 
-            method="POST" 
-            data-netlify="true" 
-            onSubmit={handleSubmit} 
-            className="space-y-6 animate-fade-up"
-          >
-            {/* Hidden field required for Netlify AJAX submissions */}
-            <input type="hidden" name="form-name" value="support-form" />
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="font-sans-bold text-sm text-[#1B2E24]">Name</label>
-                <input name="name" required type="text" className="w-full bg-[#F4F7F5] border border-[#1B2E24]/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#69C7A6] font-sans" placeholder="Jane Doe" />
-              </div>
-              <div className="space-y-2">
-                <label className="font-sans-bold text-sm text-[#1B2E24]">Email (Optional)</label>
-                <input name="email" type="email" className="w-full bg-[#F4F7F5] border border-[#1B2E24]/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#69C7A6] font-sans" placeholder="jane@example.com" />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="font-sans-bold text-sm text-[#1B2E24]">Topic</label>
-              <select name="topic" className="w-full bg-[#F4F7F5] border border-[#1B2E24]/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#69C7A6] font-sans text-[#1B2E24]">
-                <option>Feature Request</option>
-                <option>Bug Report</option>
-                <option>Question on Content</option>
-                <option>Other</option>
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="font-sans-bold text-sm text-[#1B2E24]">Message</label>
-              <textarea name="message" required rows="4" className="w-full bg-[#F4F7F5] border border-[#1B2E24]/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#69C7A6] font-sans resize-none" placeholder="Tell me what's on your mind..."></textarea>
-            </div>
-
-            <button 
-              type="submit" 
-              disabled={status === 'submitting'}
-              className="w-full bg-[#1B2E24] text-[#F4F7F5] font-sans-bold py-4 rounded-xl hover:bg-[#69C7A6] hover:text-[#1B2E24] transition-colors disabled:opacity-50"
-            >
-              {status === 'submitting' ? 'Sending...' : 'Send Message'}
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// 7. Footer
-const Footer = ({ setView }) => (
-  <footer className="bg-[#0C1712] text-[#F4F7F5] pt-24 pb-8 px-6 md:px-12 relative z-20">
-    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 border-b border-white/10 pb-16">
-      <div className="col-span-1 md:col-span-2">
-        <div className="font-sans-bold text-2xl tracking-tight flex items-center gap-2 mb-4">
-          <Globe2 className="w-6 h-6 text-[#69C7A6]" />
-          Earth Science Regents
-        </div>
-        <p className="font-sans text-[#F4F7F5]/50 max-w-sm">
-          Built by a teacher, for the students. Master the NYS Earth Science Regents with focused, essential tools.
+  if (status === 'success') {
+    return (
+      <div className="rounded-3xl border p-8" style={{ borderColor: theme.accentSoft, backgroundColor: theme.panel }}>
+        <CheckCircle2 className="mb-4 h-10 w-10" style={{ color: theme.accent }} />
+        <h3 className="text-2xl font-semibold">Thanks for the feedback</h3>
+        <p className="mt-2" style={{ color: theme.muted }}>
+          Your message was sent and tagged for {app.name}.
         </p>
       </div>
-      <div>
-        <h4 className="font-mono text-xs text-[#69C7A6] mb-6 tracking-widest uppercase">Platform</h4>
-        <ul className="space-y-4 font-sans text-sm text-[#F4F7F5]/70">
-          <li><a href="https://apps.apple.com/us/app/earth-science-regents-study/id378695932" target="_blank" rel="noopener noreferrer" className="hover:text-[#F4F7F5] transition-colors">App Store</a></li>
-          <li><button onClick={() => setView('support')} className="hover:text-[#F4F7F5] transition-colors">Support / Feedback</button></li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="font-mono text-xs text-[#69C7A6] mb-6 tracking-widest uppercase">Legal</h4>
-        <ul className="space-y-4 font-sans text-sm text-[#F4F7F5]/70">
-          <li><a href="#" className="hover:text-[#F4F7F5] transition-colors">Privacy Policy</a></li>
-          <li><a href="#" className="hover:text-[#F4F7F5] transition-colors">Terms of Service</a></li>
-        </ul>
-      </div>
-    </div>
-    
-    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div className="font-sans text-xs text-[#F4F7F5]/40">
-        © 2026 Earth Science Regents Study App. Version 3.01.
-      </div>
-    </div>
-  </footer>
-);
-
-// --- MAIN APP ---
-export default function App() {
-  const [view, setView] = useState('home'); // 'home' | 'support'
-
-  useEffect(() => {
-    // Scroll to top when view changes
-    window.scrollTo(0, 0);
-  }, [view]);
+    );
+  }
 
   return (
-    <>
-      <GlobalStyles />
-      {/* Global Noise Overlay */}
-      <svg className="hidden">
-        <filter id="noiseFilter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-        </filter>
-      </svg>
-      <div className="noise-overlay" style={{ filter: 'url(#noiseFilter)' }} />
-      
-      <main className="relative bg-[#F4F7F5]">
-        {view === 'home' ? (
-          <>
-            <Navbar setView={setView} />
-            <Hero />
-            <Protocol />
-            <TeacherNote setView={setView} />
-            <Footer setView={setView} />
-          </>
-        ) : (
-          <SupportForm setView={setView} />
-        )}
-      </main>
-    </>
+    <form
+      name="support-form"
+      method="POST"
+      data-netlify="true"
+      onSubmit={handleSubmit}
+      className="space-y-5 rounded-3xl border p-8"
+      style={{ borderColor: theme.accentSoft, backgroundColor: theme.panel }}
+    >
+      <input type="hidden" name="form-name" value="support-form" />
+      <input type="hidden" name="app_id" value={app.id} />
+      <input type="hidden" name="app_name" value={app.name} />
+
+      <div>
+        <h3 className="text-2xl font-semibold">Feedback</h3>
+        <p className="mt-2" style={{ color: theme.muted }}>
+          This form is tagged for: <strong>{app.name}</strong>
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <input
+          name="name"
+          required
+          type="text"
+          placeholder="Name"
+          className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+          style={{ borderColor: theme.accentSoft }}
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email (optional)"
+          className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+          style={{ borderColor: theme.accentSoft }}
+        />
+      </div>
+
+      <select
+        name="topic"
+        className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+        style={{ borderColor: theme.accentSoft }}
+      >
+        <option>Feature Request</option>
+        <option>Bug Report</option>
+        <option>Question</option>
+        <option>Other</option>
+      </select>
+
+      <textarea
+        name="message"
+        required
+        rows="4"
+        placeholder="What would you like to share?"
+        className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2"
+        style={{ borderColor: theme.accentSoft }}
+      />
+
+      <button
+        type="submit"
+        disabled={status === 'submitting'}
+        className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold transition disabled:opacity-60"
+        style={{ backgroundColor: theme.ink, color: '#FFFFFF' }}
+      >
+        <MessageSquare className="h-4 w-4" />
+        {status === 'submitting' ? 'Sending...' : 'Send Feedback'}
+      </button>
+    </form>
   );
+}
+
+function AppPage({ app, onBack }) {
+  const theme = THEMES[app.id];
+  const Icon = app.icon;
+
+  return (
+    <div style={pageWrapStyle(theme)}>
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 md:px-12 lg:px-0">
+        <button
+          type="button"
+          onClick={onBack}
+          className="rounded-full border px-4 py-2 text-sm font-semibold"
+          style={{ borderColor: theme.accentSoft }}
+        >
+          Back to all apps
+        </button>
+        <div className="text-sm font-semibold" style={{ color: theme.muted }}>
+          Regents Prep App Series
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-6 pb-16 md:px-12 lg:px-0">
+        <section
+          className="rounded-3xl border px-8 py-12 md:px-12 md:py-16"
+          style={{ backgroundColor: theme.panel, borderColor: theme.accentSoft }}
+        >
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide" style={{ backgroundColor: theme.accentSoft, color: theme.ink }}>
+            <Sparkles className="h-3.5 w-3.5" />
+            {app.subtitle}
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl" style={{ backgroundColor: theme.accentSoft }}>
+              <Icon className="h-6 w-6" style={{ color: theme.ink }} />
+            </span>
+            <h1 className="text-4xl font-bold md:text-5xl">{app.name}</h1>
+          </div>
+          <p className="mt-5 max-w-3xl text-lg" style={{ color: theme.muted }}>
+            {app.description}
+          </p>
+
+          {!app.comingSoon && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={app.appStoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold"
+                style={{ backgroundColor: theme.ink, color: '#FFFFFF' }}
+              >
+                Download on App Store <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          )}
+        </section>
+
+        {app.comingSoon ? (
+          <section className="mt-8 rounded-3xl border p-10" style={{ backgroundColor: theme.panel, borderColor: theme.accentSoft }}>
+            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase" style={{ backgroundColor: theme.accentSoft, color: theme.ink }}>
+              <Rocket className="h-3.5 w-3.5" /> In development
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold">Coming soon</h2>
+            <p className="mt-3 max-w-2xl" style={{ color: theme.muted }}>
+              This page is intentionally live so you can submit feedback early. Content and app links will be published here when development is ready.
+            </p>
+          </section>
+        ) : (
+          <section className="mt-8 grid gap-5 md:grid-cols-3">
+            {app.features.map((feature) => (
+              <article
+                key={feature.title}
+                className="rounded-3xl border p-6"
+                style={{ backgroundColor: theme.panel, borderColor: theme.accentSoft }}
+              >
+                <h2 className="text-xl font-semibold">{feature.title}</h2>
+                <p className="mt-3 text-sm" style={{ color: theme.muted }}>{feature.copy}</p>
+              </article>
+            ))}
+          </section>
+        )}
+
+        <section className="mt-8">
+          <FeedbackForm app={app} theme={theme} />
+        </section>
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  const [routeAppId, setRouteAppId] = useState(() => getAppIdFromPath(window.location.pathname));
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setRouteAppId(getAppIdFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateToPath = useCallback((path, replace = false) => {
+    const next = withBasePath(path);
+    if (replace) {
+      window.history.replaceState({}, '', next);
+    } else {
+      window.history.pushState({}, '', next);
+    }
+    setRouteAppId(getAppIdFromPath(window.location.pathname));
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (routeAppId === '__not_found__') {
+      navigateToPath('/', true);
+    }
+  }, [routeAppId, navigateToPath]);
+
+  const selectedApp = useMemo(
+    () => APPS.find((app) => app.id === routeAppId) || null,
+    [routeAppId],
+  );
+
+  if (routeAppId === '__not_found__') {
+    return null;
+  }
+
+  if (!routeAppId || !selectedApp) {
+    return <LandingPage onSelect={(id) => navigateToPath(`/apps/${id}`)} />;
+  }
+
+  return <AppPage app={selectedApp} onBack={() => navigateToPath('/')} />;
 }
