@@ -6,7 +6,7 @@
   "homepage": "https://mekambo4.github.io/mekambo-site",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
