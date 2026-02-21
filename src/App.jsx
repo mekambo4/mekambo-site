@@ -275,11 +275,11 @@ function LandingPage({ onOpenApp }) {
             Regents Prep App Collection
           </p>
           <h1 className="animate-fade-up mt-4 max-w-4xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
-            Choose Your
-            <span className="font-serif italic text-[#8AD8BC]"> Regents Prep App</span>
+            Master the
+            <span className="block font-serif italic text-[#8AD8BC]">Regents.</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
-            Teacher-built study apps for NY Regents courses, each with its own color identity and dedicated feedback page.
+            A collection of teacher-built study apps for NYS Regents Courses. Practice questions from past exams, build your vocabulary with custom notecards, and unlock essential study tips.
           </p>
         </div>
       </section>
@@ -289,6 +289,23 @@ function LandingPage({ onOpenApp }) {
           {APPS.map((app) => (
             <AppCard key={app.id} app={app} onOpen={onOpenApp} />
           ))}
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden px-6 py-12 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream }}>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20"
+          style={{
+            backgroundImage:
+              'url("https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2200&auto=format&fit=crop")',
+          }}
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0C1712D9 0%, #0C1712F2 100%)' }} />
+        <div className="relative mx-auto max-w-6xl text-center">
+          <p className="font-title text-3xl md:text-5xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
+          <p className="mt-6 font-serif text-4xl italic leading-tight text-white md:text-6xl">
+            "I am an NYC public school teacher and want to make this app as useful as possible. Please submit feature requests or bugs, and I will work to improve it."
+          </p>
         </div>
       </section>
 
