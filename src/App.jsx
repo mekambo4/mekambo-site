@@ -20,7 +20,8 @@ const APPS = [
     id: 'earth-space',
     name: 'Earth & Space Science',
     subtitle: 'Available now',
-    examDate: 'June 18, 2026',
+    examLabel: 'Next Earth and Space Science Regents Exam',
+    examDate: 'Thursday, June 18, 2026 at 1:15 PM ET',
     comingSoon: false,
     icon: Leaf,
     image:
@@ -47,7 +48,8 @@ const APPS = [
     id: 'biology',
     name: 'Biology',
     subtitle: 'Coming soon',
-    examDate: 'June 2026',
+    examLabel: 'Next Biology Regents Exam',
+    examDate: 'Thursday, June 18, 2026 at 9:15 AM ET',
     comingSoon: true,
     icon: FlaskConical,
     image:
@@ -60,7 +62,8 @@ const APPS = [
     id: 'global-history',
     name: 'Global History',
     subtitle: 'Coming soon',
-    examDate: 'June 2026',
+    examLabel: 'Next Global History Regents Exam',
+    examDate: 'Wednesday, June 17, 2026 at 1:15 PM ET',
     comingSoon: true,
     icon: Globe2,
     image:
@@ -73,7 +76,8 @@ const APPS = [
     id: 'us-history',
     name: 'United States History',
     subtitle: 'Coming soon',
-    examDate: 'June 2026',
+    examLabel: 'Next United States History Regents Exam',
+    examDate: 'Tuesday, June 23, 2026 at 9:15 AM ET',
     comingSoon: true,
     icon: Landmark,
     image:
@@ -86,7 +90,8 @@ const APPS = [
     id: 'algebra-1',
     name: 'Algebra I',
     subtitle: 'Coming soon',
-    examDate: 'June 2026',
+    examLabel: 'Next Algebra I Regents Exam',
+    examDate: 'Wednesday, June 17, 2026 at 9:15 AM ET',
     comingSoon: true,
     icon: Sigma,
     image:
@@ -368,7 +373,7 @@ function Hero({ app }) {
       <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-2 pt-14 md:px-10 md:pb-2 md:pt-20 lg:px-0">
         <div className="max-w-4xl text-white">
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#C3E7D9]" style={{ animationDelay: '0.15s' }}>
-            <CalendarClock className="mr-2 inline h-4 w-4" /> Regents target: {app.examDate}
+            <CalendarClock className="mr-2 inline h-4 w-4" /> {app.examLabel}: {app.examDate}
           </p>
           <h1 className="animate-fade-up mt-4 font-title text-5xl leading-[0.95] md:text-7xl" style={{ animationDelay: '0.25s' }}>
             Master
