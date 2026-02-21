@@ -302,14 +302,14 @@ function LandingPage({ onOpenApp }) {
         />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0C1712D9 0%, #0C1712F2 100%)' }} />
         <div className="relative mx-auto max-w-6xl text-center">
-          <p className="font-title text-xl md:text-3xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
-          <p className="mt-5 font-serif text-xl italic leading-tight text-white md:text-3xl">
+          <p className="font-title text-lg md:text-2xl" style={{ color: baseTheme.accent }}>A note from the developer</p>
+          <p className="mt-4 font-serif text-lg italic leading-tight text-white md:text-2xl">
             "I am an NYC public school teacher and want to make these apps as useful as possible. Please submit feature requests or bugs, and I will work to improve them. I would be delighted to hear if it is helpful to you."
           </p>
         </div>
       </section>
 
-      <footer className="-mt-px px-6 pb-4 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream, borderTop: 0 }}>
+      <footer className="-mt-px px-6 pb-8 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream, borderTop: 0 }}>
         <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
@@ -719,7 +719,7 @@ function AppPage({ app, onHome, onFeedback }) {
       <Hero app={app} />
       <FeatureSection app={app} />
 
-      <footer className="-mt-px px-6 pb-4 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream, borderTop: 0 }}>
+      <footer className="-mt-px px-6 pb-8 pt-1 md:px-10 lg:px-0" style={{ backgroundColor: theme.ink, color: theme.cream, borderTop: 0 }}>
         <div className="mx-auto flex max-w-6xl flex-col gap-1 pt-1 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: theme.accent }} /> Regents Prep App Series
