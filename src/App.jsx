@@ -13,7 +13,6 @@ import {
   MessageSquare,
   Rocket,
   Sigma,
-  Sparkles,
 } from 'lucide-react';
 
 const APPS = [
@@ -239,7 +238,7 @@ function AppCard({ app, onOpen }) {
           {app.subtitle}
         </span>
       </div>
-      <h3 className="font-serif text-3xl italic leading-tight" style={{ color: theme.accent }}>
+      <h3 className="font-serif text-4xl italic leading-tight md:text-5xl" style={{ color: theme.accent }}>
         {app.name}
       </h3>
       <p className="mt-3 text-sm" style={{ color: `${theme.ink}BB` }}>
@@ -314,9 +313,14 @@ function LandingPage({ onOpenApp }) {
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-title font-semibold" style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}>
-            <Sparkles className="h-4 w-4" /> Select an App to continue
-          </div>
+          <button
+            type="button"
+            onClick={() => onOpenApp('earth-space')}
+            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+            style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}
+          >
+            <MessageSquare className="h-4 w-4" /> Send Feedback
+          </button>
         </div>
       </footer>
     </div>
