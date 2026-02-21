@@ -238,7 +238,7 @@ function AppCard({ app, onOpen }) {
           {app.subtitle}
         </span>
       </div>
-      <h3 className="font-serif text-4xl italic leading-tight md:text-5xl" style={{ color: theme.accent }}>
+      <h3 className="font-serif text-3xl italic leading-tight md:text-[2.2rem]" style={{ color: theme.accent }}>
         {app.name}
       </h3>
       <p className="mt-3 text-sm" style={{ color: `${theme.ink}BB` }}>
@@ -273,9 +273,9 @@ function LandingPage({ onOpenApp }) {
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#9FD8C2]" style={{ animationDelay: '0.1s' }}>
             Regents Prep App Collection
           </p>
-          <h1 className="animate-fade-up mt-4 max-w-4xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
+          <h1 className="animate-fade-up mt-4 max-w-5xl font-title text-5xl leading-[0.95] text-[#F4F7F5] md:text-7xl" style={{ animationDelay: '0.2s' }}>
             Master the
-            <span className="block font-serif italic text-[#8AD8BC]">Regents.</span>
+            <span className="ml-3 inline font-serif text-6xl italic text-[#8AD8BC] md:text-[6rem]">Regents.</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
             A collection of teacher-built study apps for NYS Regents Courses. Practice questions from past exams, build your vocabulary with custom notecards, and unlock essential study tips.
