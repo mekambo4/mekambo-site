@@ -339,7 +339,7 @@ function Hero({ app }) {
       <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.ink}88 0%, ${theme.ink}CC 65%, ${theme.ink} 100%)` }} />
       <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.ink}CC 10%, transparent 70%)` }} />
 
-      <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-2 pt-6 md:px-10 md:pb-3 md:pt-8 lg:px-0">
+      <div className="relative mx-auto flex h-full max-w-6xl items-start px-6 pb-0 pt-4 md:px-10 md:pb-0 md:pt-6 lg:px-0">
         <div className="max-w-4xl text-white">
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#C3E7D9]" style={{ animationDelay: '0.15s' }}>
             <CalendarClock className="mr-2 inline h-4 w-4" /> Regents target: {app.examDate}
@@ -354,7 +354,7 @@ function Hero({ app }) {
             {app.description}
           </p>
 
-          <div className="animate-fade-up mt-10 flex flex-wrap items-center gap-4" style={{ animationDelay: '0.55s' }}>
+          <div className="animate-fade-up mt-6 flex flex-wrap items-center gap-4" style={{ animationDelay: '0.55s' }}>
             {app.comingSoon ? (
               <span
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold"
