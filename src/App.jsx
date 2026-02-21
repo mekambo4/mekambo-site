@@ -162,10 +162,10 @@ const parseRoute = (pathname) => {
   if (relative === '/') return { page: 'landing' };
   if (relative === '/feedback') return { page: 'collection_feedback' };
 
-  const feedbackMatch = /^\/apps\/([^/]+)\/feedback$/.exec(relative);
+  const feedbackMatch = /^\/apps?\/([^/]+)\/feedback$/.exec(relative);
   if (feedbackMatch) return { page: 'feedback', appId: decodeURIComponent(feedbackMatch[1]) };
 
-  const appMatch = /^\/apps\/([^/]+)$/.exec(relative);
+  const appMatch = /^\/apps?\/([^/]+)$/.exec(relative);
   if (appMatch) return { page: 'app', appId: decodeURIComponent(appMatch[1]) };
 
   return { page: 'not_found' };
