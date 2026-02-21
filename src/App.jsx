@@ -287,6 +287,17 @@ function LandingPage({ onOpenApp }) {
           ))}
         </div>
       </section>
+
+      <footer className="px-6 pb-12 pt-6 md:px-10 lg:px-0" style={{ backgroundColor: baseTheme.ink, color: baseTheme.cream }}>
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 border-t border-white/20 pt-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-2 font-title text-lg">
+            <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold" style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}>
+            <Sparkles className="h-4 w-4" /> Select an app to continue
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -328,7 +339,7 @@ function Hero({ app }) {
       <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${theme.ink}88 0%, ${theme.ink}CC 65%, ${theme.ink} 100%)` }} />
       <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${theme.ink}CC 10%, transparent 70%)` }} />
 
-      <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-5 pt-12 md:px-10 md:pb-7 md:pt-14 lg:px-0">
+      <div className="relative mx-auto flex h-full max-w-6xl items-center px-6 pb-2 pt-6 md:px-10 md:pb-3 md:pt-8 lg:px-0">
         <div className="max-w-4xl text-white">
           <p className="animate-fade-up font-mono text-xs uppercase tracking-[0.2em] text-[#C3E7D9]" style={{ animationDelay: '0.15s' }}>
             <CalendarClock className="mr-2 inline h-4 w-4" /> Regents target: {app.examDate}
