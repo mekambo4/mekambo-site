@@ -162,6 +162,7 @@ const parseRoute = (pathname) => {
   const relative = stripBasePath(pathname);
   if (relative === '/') return { page: 'landing' };
   if (relative === '/feedback') return { page: 'collection_feedback' };
+  if (relative === '/privacy') return { page: 'privacy' };
 
   const feedbackMatch = /^\/apps?\/([^/]+)\/feedback$/.exec(relative);
   if (feedbackMatch) return { page: 'feedback', appId: decodeURIComponent(feedbackMatch[1]) };
@@ -177,6 +178,19 @@ const getTheme = (appId) => THEMES[appId] || THEMES['earth-space'];
 const submitFeedback = async (formData) => {
   if (!FEEDBACK_ENDPOINT) {
     throw new Error('Feedback endpoint is not configured');
+  }
+
+  if (!formData.get('_subject')) {
+    formData.append('_subject', 'Regents Study Apps Feedback');
+  }
+  if (!formData.get('_template')) {
+    formData.append('_template', 'table');
+  }
+  if (!formData.get('_captcha')) {
+    formData.append('_captcha', 'false');
+  }
+  if (!formData.get('_url')) {
+    formData.append('_url', window.location.href);
   }
 
   const response = await fetch(FEEDBACK_ENDPOINT, {
@@ -338,14 +352,24 @@ function LandingPage({ onOpenApp }) {
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: baseTheme.accent }} /> Regents Prep App Series
           </div>
-          <button
-            type="button"
-            onClick={() => onOpenApp('feedback')}
-            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
-            style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}
-          >
-            <MessageSquare className="h-4 w-4" /> Send Feedback
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onOpenApp('privacy')}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+              style={{ backgroundColor: `${baseTheme.accent}33`, color: baseTheme.cream }}
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenApp('feedback')}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+              style={{ backgroundColor: baseTheme.accent, color: baseTheme.moss }}
+            >
+              <MessageSquare className="h-4 w-4" /> Send Feedback
+            </button>
+          </div>
         </div>
       </footer>
     </div>
@@ -744,7 +768,74 @@ function CollectionFeedbackPage({ onHome }) {
   );
 }
 
-function AppPage({ app, onHome, onFeedback }) {
+function PrivacyPolicyPage({ onHome }) {
+  const theme = getTheme('earth-space');
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: theme.ink, color: theme.cream }}>
+      <div className="mx-auto max-w-4xl px-6 pb-16 pt-10 md:px-10 lg:px-0">
+        <button
+          type="button"
+          onClick={onHome}
+          className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2 text-sm font-title font-semibold text-white"
+          style={{ backgroundColor: `${theme.accent}33` }}
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to All Apps
+        </button>
+
+        <div className="mt-6 rounded-[2rem] border border-white/15 bg-white/95 p-8 text-[#0C1712] shadow-2xl md:p-10">
+          <h1 className="font-title text-4xl leading-tight md:text-5xl">Privacy Policy</h1>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">Effective Date: February 22, 2026</p>
+          <p className="mt-4 text-sm text-[#1B2E24CC]">
+            This policy applies to the Regents Study Apps, including Earth &amp; Space Science, Biology, Global History,
+            United States History, and Algebra I iOS applications.
+          </p>
+
+          <h2 className="mt-8 font-title text-2xl">Information We Collect</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            We may collect information you submit directly, such as your name, email address, and feedback messages.
+            We may also collect limited technical information needed to operate and improve the apps.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">How We Use Information</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            We use information to respond to feedback, fix bugs, improve app content and features, and support app security
+            and reliability.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">Information Sharing</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            We do not sell your personal information. We may use trusted service providers that help operate app services,
+            such as form processing and app hosting.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">Children&apos;s Privacy</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            These apps are educational tools. We do not knowingly collect personal information from children in a way that
+            violates applicable law.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">Data Retention</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            We retain information only as long as needed for support, product improvement, and legal compliance.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">Your Choices</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            You may choose whether to submit feedback and contact us to request updates or deletion of information you have provided.
+          </p>
+
+          <h2 className="mt-6 font-title text-2xl">Contact</h2>
+          <p className="mt-2 text-sm text-[#1B2E24CC]">
+            If you have questions about this policy, contact: <a href="mailto:mekambo4@gmail.com" className="underline">mekambo4@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AppPage({ app, onHome, onFeedback, onPrivacy }) {
   const theme = getTheme(app.id);
 
   return (
@@ -758,14 +849,24 @@ function AppPage({ app, onHome, onFeedback }) {
           <div className="flex items-center gap-2 font-title text-lg">
             <Atom className="h-5 w-5" style={{ color: theme.accent }} /> Regents Prep App Series
           </div>
-          <button
-            type="button"
-            onClick={onFeedback}
-            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
-            style={{ backgroundColor: theme.accent, color: theme.moss }}
-          >
-            <MessageSquare className="h-4 w-4" /> Send Feedback
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onPrivacy}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+              style={{ backgroundColor: `${theme.accent}33`, color: theme.cream }}
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={onFeedback}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
+              style={{ backgroundColor: theme.accent, color: theme.moss }}
+            >
+              <MessageSquare className="h-4 w-4" /> Send Feedback
+            </button>
+          </div>
         </div>
       </footer>
     </div>
@@ -818,6 +919,10 @@ export default function App() {
               goTo('/feedback');
               return;
             }
+            if (appId === 'privacy') {
+              goTo('/privacy');
+              return;
+            }
             goTo(`/apps/${appId}`);
           }}
         />
@@ -828,6 +933,7 @@ export default function App() {
           app={selectedApp}
           onHome={() => goTo('/')}
           onFeedback={() => goTo(`/apps/${selectedApp.id}/feedback`)}
+          onPrivacy={() => goTo('/privacy')}
         />
       )}
 
@@ -842,6 +948,8 @@ export default function App() {
       {route.page === 'collection_feedback' && (
         <CollectionFeedbackPage onHome={() => goTo('/')} />
       )}
+
+      {route.page === 'privacy' && <PrivacyPolicyPage onHome={() => goTo('/')} />}
     </>
   );
 }
