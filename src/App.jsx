@@ -768,7 +768,7 @@ function CollectionFeedbackPage({ onHome }) {
   );
 }
 
-function PrivacyPolicyPage({ onHome }) {
+function PrivacyPolicyPage({ onHome, onFeedback }) {
   const theme = getTheme('earth-space');
 
   return (
@@ -827,7 +827,7 @@ function PrivacyPolicyPage({ onHome }) {
 
           <h2 className="mt-6 font-title text-2xl">Contact</h2>
           <p className="mt-2 text-sm text-[#1B2E24CC]">
-            If you have questions about this policy, contact: <a href="mailto:mekambo4@gmail.com" className="underline">mekambo4@gmail.com</a>
+            If you have questions about this policy, contact us through the <button type="button" onClick={onFeedback} className="underline">site feedback form</button>.
           </p>
         </div>
       </div>
@@ -949,7 +949,7 @@ export default function App() {
         <CollectionFeedbackPage onHome={() => goTo('/')} />
       )}
 
-      {route.page === 'privacy' && <PrivacyPolicyPage onHome={() => goTo('/')} />}
+      {route.page === 'privacy' && <PrivacyPolicyPage onHome={() => goTo('/')} onFeedback={() => goTo('/feedback')} />}
     </>
   );
 }
