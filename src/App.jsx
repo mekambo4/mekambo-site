@@ -345,7 +345,7 @@ function LandingPage({ onOpenApp }) {
             <span className="ml-3 inline font-serif text-6xl italic text-[#8AD8BC] md:text-[6rem]">Regents.</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-[#E0ECE7]" style={{ animationDelay: '0.35s' }}>
-            A collection of teacher-built study apps for NYS Regents Courses. Practice questions from past exams, build your vocabulary with custom notecards, and unlock essential study tips. Each app also lets you know exactly how much time you have until the Regents exam, down to the second.
+            A collection of teacher-built study apps for NYS Regents Courses. Practice questions from past exams, build your vocabulary with custom notecards, and unlock essential study tips. Each app also has a count down timer letting you know exactly how much time you have until the Regents exam, down to the second!
           </p>
         </div>
       </section>
