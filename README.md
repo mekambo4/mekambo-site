@@ -62,6 +62,18 @@ If the deployed site serves from a repository subpath, make sure `base` in `/Use
 - Main landing experience and support form logic are in `/Users/mekambo/Development/mekambo-site/src/App.jsx`.
 - The support form is configured for Netlify form handling (`data-netlify="true"`) and also posts with AJAX from the client.
 
+## Feedback Form (FormSubmit)
+
+To receive feedback emails from the live GitHub Pages site:
+
+1. Create a local `.env` from `.env.example`.
+2. Set `VITE_FEEDBACK_ENDPOINT` to your FormSubmit AJAX endpoint:
+   - `https://formsubmit.co/ajax/you@example.com`
+3. Run the site and submit a test form once.
+4. Confirm your email via FormSubmit's verification message.
+
+After verification, form submissions will be delivered to your email.
+
 ## License
 
 No license file is currently defined in this repository.
