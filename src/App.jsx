@@ -61,16 +61,30 @@ const APPS = [
   {
     id: 'global-history',
     name: 'Global History',
-    subtitle: 'Coming soon',
+    subtitle: 'Available now',
     examLabel: 'Next Global History Regents Exam',
     examDate: 'Wednesday, June 17, 2026 at 1:15 PM ET',
-    comingSoon: true,
+    comingSoon: false,
     icon: Globe2,
     image:
       'https://images.unsplash.com/photo-1461360370896-922624d12aa1?q=80&w=2200&auto=format&fit=crop',
     description:
-      'A future Regents prep app focused on major eras, global themes, and evidence-based writing.',
-    features: [],
+      'Build confidence for Global History with themed review, writing practice, and Regents-style prep tools.',
+    appStoreUrl: 'https://apps.apple.com/app/global-history-regents-study/id490453454',
+    features: [
+      {
+        title: 'Thematic & Chronological Review',
+        body: 'Study major eras, global themes, and key turning points with focused, exam-aligned practice.',
+      },
+      {
+        title: 'DBQ & Essay Writing Support',
+        body: 'Practice evidence-based responses and strengthen how you organize and defend historical arguments.',
+      },
+      {
+        title: 'Regents-Style Practice Sets',
+        body: 'Train with multiple-choice and writing-focused review that mirrors test-day expectations.',
+      },
+    ],
   },
   {
     id: 'us-history',
@@ -89,16 +103,30 @@ const APPS = [
   {
     id: 'algebra-1',
     name: 'Algebra I',
-    subtitle: 'Coming soon',
+    subtitle: 'Available now',
     examLabel: 'Next Algebra I Regents Exam',
     examDate: 'Wednesday, June 17, 2026 at 9:15 AM ET',
-    comingSoon: true,
+    comingSoon: false,
     icon: Sigma,
     image:
       'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2200&auto=format&fit=crop',
     description:
-      'A future Regents prep app focused on fluency, procedural confidence, and model-based problem solving.',
-    features: [],
+      'Strengthen Algebra I skills with focused practice, clear worked examples, and Regents-style prep.',
+    appStoreUrl: 'https://apps.apple.com/app/al1tutorial/id6759636986',
+    features: [
+      {
+        title: 'Skills-Based Problem Sets',
+        body: 'Practice linear equations, systems, functions, and other core standards with targeted review.',
+      },
+      {
+        title: 'Step-by-Step Solution Guidance',
+        body: 'See structured solution paths that reinforce the process needed to earn full credit on Regents tasks.',
+      },
+      {
+        title: 'Regents-Style Mixed Practice',
+        body: 'Build stamina with mixed sets that mirror question variety and pacing expectations for test day.',
+      },
+    ],
   },
 ];
 
